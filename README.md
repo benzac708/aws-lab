@@ -1,16 +1,18 @@
 # aws-lab
 
-Terraform labs for AWS infrastructure.
+Terraform lab for AWS infrastructure.
 
-## Labs
+## What it builds
 
-- `lab-minimal/`: EC2 + security group + key pair
-- `lab-vpc/`: Full VPC with public subnet, NAT gateway
+- VPC with public, private, and data subnets
+- Internet gateway and NAT gateway
+- Bastion host and security groups
+- S3 and DynamoDB state resources
+- VPC endpoints for private AWS service access
 
 ## Usage
 
 ```bash
-cd lab-minimal
 terraform init
 terraform plan
 terraform apply
@@ -18,10 +20,9 @@ terraform apply
 terraform destroy
 ```
 
-## What it demonstrates
+## Files
 
-- `terraform init`, `plan`, `apply`, `destroy` lifecycle
-- AWS provider configuration
-- EC2 instance provisioning
-- Security group rules
-- VPC networking basics
+- `main.tf`: core AWS resources
+- `backend.tf`: state bucket and lock table resources
+- `variables.tf`: input variables
+- `terraform.tfvars.example`: starter values
