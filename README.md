@@ -21,6 +21,11 @@ terraform apply
 terraform destroy
 ```
 
+## Verification
+
+- Tested with real `terraform apply` and `terraform destroy` in AWS
+- Bastion host SSH access verified after apply
+
 ## Files
 
 - `main.tf`: core AWS resources
