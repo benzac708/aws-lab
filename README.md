@@ -9,6 +9,7 @@ Terraform lab for AWS infrastructure.
 - Bastion host and security groups
 - S3 and DynamoDB state resources
 - VPC endpoints for private AWS service access
+- Latest Ubuntu 22.04 LTS AMI looked up automatically for the bastion host
 
 ## Usage
 

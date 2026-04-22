@@ -75,9 +75,9 @@ variable "bastion_instance_type" {
 }
 
 variable "bastion_ami" {
-  description = "AMI for bastion host (Ubuntu 22.04 LTS)"
+  description = "Optional AMI override for bastion host. Leave empty to use latest Ubuntu 22.04 LTS."
   type        = string
-  default     = "ami-0a0c8e9a4f1a0c7e3"
+  default     = ""
 }
 
 variable "ssh_public_key_path" {

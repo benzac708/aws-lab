@@ -30,6 +30,27 @@ locals {
   )
 }
 
+# Use the latest Ubuntu 22.04 LTS AMI unless an explicit override is provided.
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+}
+
 # ============================================================================
 # VPC
 # ============================================================================
@@ -275,7 +296,7 @@ resource "aws_key_pair" "bastion" {
 # BASTION HOST
 # ============================================================================
 resource "aws_instance" "bastion" {
-  ami                         = var.bastion_ami
+  ami                         = var.bastion_ami != "" ? var.bastion_ami : data.aws_ami.ubuntu.id
   instance_type               = var.bastion_instance_type
   subnet_id                   = aws_subnet.public[0].id
   vpc_security_group_ids      = [aws_security_group.bastion.id]
