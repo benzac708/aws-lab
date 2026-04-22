@@ -1,0 +1,7 @@
+project_name        = "zachara-awslab"
+aws_region          = "us-east-1"
+instance_type       = "t4g.nano"
+ssh_public_key_path = "~/.ssh/azure_lab_rsa.pub"
+
+# Tighten this before apply if you know your current public IP.
+allowed_ssh_cidr = "0.0.0.0/0"
