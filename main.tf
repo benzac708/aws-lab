@@ -84,7 +84,7 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_cidrs[count.index]
   availability_zone       = var.availability_zones[count.index]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-public-${var.availability_zones[count.index]}"
@@ -242,12 +242,7 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = [var.allowed_ssh_cidr]
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # No outbound rules: the bastion is an SSH jump host only.
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-bastion-sg"
@@ -269,13 +264,8 @@ resource "aws_security_group" "private_subnet" {
     cidr_blocks = [var.vpc_cidr]
   }
 
-  # Allow outbound to anywhere (for package updates, API calls)
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # No outbound rules: private resources are expected to use VPC endpoints or
+  # an explicitly reviewed egress policy.
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-private-sg"
@@ -303,13 +293,14 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.bastion.key_name
 
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update -y
-              apt-get install -y awslogs
-              systemctl enable awslogs
-              systemctl start awslogs
-              EOF
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  root_block_device {
+    encrypted = true
+  }
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-bastion"

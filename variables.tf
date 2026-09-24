@@ -58,13 +58,12 @@ variable "data_subnet_cidrs" {
 }
 
 variable "allowed_ssh_cidr" {
-  description = "CIDR block allowed for SSH access to bastion"
+  description = "Narrow administrator CIDR allowed to reach the bastion SSH port"
   type        = string
-  default     = "0.0.0.0/0"
 
   validation {
-    condition     = can(cidrhost(var.allowed_ssh_cidr, 0))
-    error_message = "Must be a valid CIDR block."
+    condition     = can(cidrhost(var.allowed_ssh_cidr, 0)) && var.allowed_ssh_cidr != "0.0.0.0/0"
+    error_message = "Must be a valid, non-public CIDR block; pass your current administrator CIDR explicitly."
   }
 }
 
