@@ -23,6 +23,9 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
   }
 }
 
+# SSE-S3 is intentional for this low-cost lab state bucket; a production state
+# bucket should use a customer-managed KMS key and key rotation.
+# trivy:ignore:AWS-0132
 resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
   bucket = aws_s3_bucket.terraform_state.id
 
