@@ -5,6 +5,4 @@ terraform fmt -check -diff
 terraform init -backend=false -input=false
 terraform validate
 
-TRIVY_CACHE_DIR="${TRIVY_CACHE_DIR:-$PWD/.trivy-cache}"
-export TRIVY_CACHE_DIR
-trivy config --severity HIGH,CRITICAL --exit-code 1 .
+# Trivy runs as the dedicated CI step in the workflow.
